@@ -8,7 +8,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final CourseRepository courseRepository;
 
     private final Long teacher_id;
-    private final int TIRED_LIMIT = 10;
+    private final int COURSE_NUMBER_LIMIT = 10;
+    private final int STUDENT_NUMBER_LIMIT = 10;
 
     public TeacherServiceImpl(StudentRepository studentRepository, CourseRepository courseRepository, Long teacher_id) {
         this.studentRepository = studentRepository;
@@ -27,6 +28,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public boolean shouldBeTired() {
-        return courseRepository.getElementCount(teacher_id) > TIRED_LIMIT;
+        return courseRepository.getElementCount(teacher_id) > COURSE_NUMBER_LIMIT || getMyStudents().size() > STUDENT_NUMBER_LIMIT;
     }
 }

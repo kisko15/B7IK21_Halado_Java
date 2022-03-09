@@ -39,11 +39,12 @@ public class TeacherServiceImplTest {
     }
 
     @Test
-    public void shouldBeTired() {
+    public void shouldBeTiredTooMuchCourse() {
         //GIVEN
         Long teacherId = 234L;
+        int numberOfCourse = 125;
         CourseRepository courseRepository = mock(CourseRepository.class);
-        when(courseRepository.getElementCount(teacherId)).thenReturn(125);
+        when(courseRepository.getElementCount(teacherId)).thenReturn(numberOfCourse);
         StudentRepository studentRepository = mock(StudentRepository.class);
         TeacherServiceImpl teacher = new TeacherServiceImpl(studentRepository, courseRepository, teacherId);
 
@@ -55,12 +56,38 @@ public class TeacherServiceImplTest {
     public void shouldBeTired_No() {
         //GIVEN
         Long teacherId = 234L;
+        int numberOfCourse = 1;
         CourseRepository courseRepository = mock(CourseRepository.class);
-        when(courseRepository.getElementCount(teacherId)).thenReturn(1);
+        when(courseRepository.getElementCount(teacherId)).thenReturn(numberOfCourse);
         StudentRepository studentRepository = mock(StudentRepository.class);
-        TeacherServiceImpl teacher = new TeacherServiceImpl(null, courseRepository, teacherId);
+        TeacherServiceImpl teacher = new TeacherServiceImpl(studentRepository, courseRepository, teacherId);
 
         //WHEN THEN
         assertFalse(teacher.shouldBeTired());
+    }
+
+    @Test
+    public void shouldBeTired_TooMuchUsers() {
+        //GIVEN
+        Long teacherId = 234L;
+        int numberOfCourse = 11;
+        CourseRepository courseRepository = mock(CourseRepository.class);
+        when(courseRepository.getElementCount(teacherId)).thenReturn(numberOfCourse);
+
+        StudentRepository studentRepository = mock(StudentRepository.class);
+        when(studentRepository.findByCourseId(anyList())).thenReturn(getStudentListElevenItem());
+
+        TeacherServiceImpl teacher = new TeacherServiceImpl(studentRepository, courseRepository, teacherId);
+
+        //WHEN THEN
+        assertTrue(teacher.shouldBeTired());
+    }
+
+    private List<StudentDto> getStudentListElevenItem() {
+        List<StudentDto> studentList = new ArrayList<>();
+        for (long i = 0; i < 11; i++) {
+            studentList.add(new StudentDto(i, "name" + i, "nc " + i));
+        }
+        return studentList;
     }
 }
