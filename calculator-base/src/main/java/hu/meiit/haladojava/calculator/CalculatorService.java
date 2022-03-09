@@ -8,7 +8,6 @@ public class CalculatorService {
 
     private char[] arr;
     private int index = 0;
-    private int checkException = 0;
     private final char[] OPERATORS = {'+','-','*','/'};
 
     public double calculate(String s) {
@@ -32,12 +31,7 @@ public class CalculatorService {
                     double curNum = Double.parseDouble(buildNum.toString());
                         insertElement(stack, curNum, operator);
                     } else if (!checkValidOperators(arr[index])){
-                    try {
-                        checkException++;
                         throw new NoSuchOperatorException();
-                    } catch (NoSuchOperatorException e) {
-
-                    }
                 } else {
                         operator = arr[index];
                     }
@@ -58,7 +52,7 @@ public class CalculatorService {
     }
 
     private void insertElement(Stack<Double> stack, double curNum, char operator) {
-        try {
+
             if (operator == '-') {
                 curNum *= -1;
             } else if (operator == '*') {
@@ -67,14 +61,10 @@ public class CalculatorService {
                 if (curNum != 0) {
                     curNum = stack.pop() / curNum;
                 } else {
-                    checkException++;
                     throw new NullPointerException();
                 }
             }
             stack.push(curNum);
-        } catch (NullPointerException e) {
-
-        }
     }
 
     public boolean checkValidOperators(char character) {
@@ -86,7 +76,4 @@ public class CalculatorService {
         return false;
     }
 
-    public int getCheckException() {
-        return checkException;
-    }
 }
